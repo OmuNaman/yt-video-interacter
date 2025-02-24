@@ -1,0 +1,208 @@
+:root {
+    --background-color: #0f0f0f;
+    --text-color: #ffffff;
+    --primary-color: #8b3dff;
+    --secondary-color: #1a1a1a;
+    --border-color: #2c2c2c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+}
+
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+.landing-page h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.search-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    gap: 10px;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.search-container button {
+    padding: 15px 25px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.content-page {
+    height: 100vh;
+    padding: 20px;
+}
+
+.main-content {
+    display: flex;
+    gap: 0;
+    height: 100%;
+    user-select: none;
+}
+
+.video-container {
+    flex: 1;
+    min-width: 0;
+    background-color: var(--secondary-color);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.sidebar {
+    flex: 0 0 33%;
+    min-width: 300px;
+    background-color: var(--secondary-color);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.resize-handle {
+    width: 8px;
+    background-color: var(--border-color);
+    cursor: col-resize;
+    transition: background-color 0.2s;
+    margin: 0 -2px;
+    position: relative;
+    z-index: 10;
+}
+
+.resize-handle:hover {
+    background-color: var(--primary-color);
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.tab-button.active {
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+    height: 100%;
+    padding: 20px;
+}
+
+.tab-content.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.welcome-message {
+    background-color: rgba(139, 61, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.send-button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+/*Existing styles*/
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;  /* Add some padding */
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    word-break: break-word; /* Prevent long words from breaking layout */
+}
+
+.message.user {
+    background-color: #333;  /* Darker for user messages */
+    color: #fff;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.message.ai {
+    background-color: #444;  /* Slightly lighter for AI */
+    color: #eee;
+    align-self: flex-start;
+    text-align: left;
+}
+
+.message.ai.loading {
+    font-style: italic; /* Indicate it's loading */
+    color: #ccc; /*Lighter color*/
+}
