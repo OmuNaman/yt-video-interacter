@@ -4,6 +4,8 @@
     --primary-color: #8b3dff;
     --secondary-color: #1a1a1a;
     --border-color: #2c2c2c;
+    --user-message-color: #3d5afe; /* Example user message bubble color */
+    --ai-message-color: #424242; /* Example AI message bubble color */
 }
 
 * {
@@ -136,14 +138,21 @@ body {
 .chat-messages {
     flex: 1;
     overflow-y: auto;
+    padding: 20px; /* Increased padding for better spacing */
+    display: flex;
+    flex-direction: column; /* Ensure messages stack from top to bottom */
 }
 
 .welcome-message {
     background-color: rgba(139, 61, 255, 0.1);
     padding: 15px;
     border-radius: 8px;
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Increased margin */
+    text-align: center; /* Center the welcome message */
+    font-style: italic; /* Slightly emphasize welcome message */
+    color: #aaa; /* Muted color for welcome message */
 }
+
 
 .chat-input {
     display: flex;
@@ -153,15 +162,16 @@ body {
 
 .chat-input input {
     flex: 1;
-    padding: 10px;
+    padding: 12px; /* Slightly reduced padding */
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background-color: var(--background-color);
     color: var(--text-color);
+    font-size: 1rem;
 }
 
 .send-button {
-    padding: 10px 20px;
+    padding: 12px 20px; /* Slightly reduced padding */
     border-radius: 8px;
     border: none;
     background-color: var(--primary-color);
@@ -173,36 +183,36 @@ body {
     display: none;
 }
 
-/*Existing styles*/
-
-.chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px;  /* Add some padding */
-}
-
+/* Enhanced Chat Message Styling */
 .message {
-    padding: 10px;
+    padding: 12px 18px; /* Adjusted padding for message bubbles */
     margin-bottom: 10px;
-    border-radius: 8px;
-    word-break: break-word; /* Prevent long words from breaking layout */
+    border-radius: 20px; /* More rounded corners for bubble effect */
+    word-break: break-word;
+    max-width: 80%; /* Limit message bubble width */
+    clear: both; /* Prevent floating issues */
 }
 
 .message.user {
-    background-color: #333;  /* Darker for user messages */
-    color: #fff;
-    align-self: flex-end;
-    text-align: right;
+    background-color: var(--user-message-color);
+    color: var(--text-color);
+    align-self: flex-end; /* Align user messages to the right */
+    text-align: left; /* Text inside bubble align left for readability */
+    margin-right: 10px; /* Add some right margin */
+    border-bottom-right-radius: 5px; /* Slightly less round on the corner towards the edge */
 }
 
 .message.ai {
-    background-color: #444;  /* Slightly lighter for AI */
+    background-color: var(--ai-message-color);
     color: #eee;
-    align-self: flex-start;
-    text-align: left;
+    align-self: flex-start; /* Align AI messages to the left */
+    text-align: left;  /* Text inside bubble align left for readability */
+    margin-left: 10px; /* Add some left margin */
+    border-bottom-left-radius: 5px; /* Slightly less round on the corner towards the edge */
 }
 
 .message.ai.loading {
-    font-style: italic; /* Indicate it's loading */
-    color: #ccc; /*Lighter color*/
+    font-style: italic;
+    color: #ccc;
+    background-color: var(--ai-message-color); /* Keep background consistent */
 }

@@ -20,7 +20,7 @@ else:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
         genai_model = genai.GenerativeModel(
-            model_name="gemini-1.5-pro-latest",  # Or your preferred model
+            model_name="gemini-2.0-flash",  # Or your preferred model
             system_instruction="You are a helpful learning assistant. You are assisting the user understand content from a YouTube video. Be concise and to the point and maintain a professional yet friendly tone.",
         )
         print("Gemini model loaded successfully.")
@@ -131,8 +131,10 @@ def chat_with_gemini():
         return jsonify({"error": "Message is required"}), 400
 
     try:
-        # 1. Get the transcript (if you haven't already, or if it's a new video)
-        if video_url not in chat_history:
+        # 1. Get the transcript (or retrieve from chat_history if it exists)
+        transcript = None  # Initialize transcript outside the if block
+        #print(chat_history)
+        if video_url not in chat_history:  # First time for this video
             subtitles = get_all_subtitles_with_timestamps(video_url)
             if "error" in subtitles:
                 return jsonify({"error": subtitles["error"]}), 400
@@ -143,18 +145,30 @@ def chat_with_gemini():
                 if key != "error": # if error don't proceed
                      transcript += subtitles[key] + "\n"
 
-            chat_history[video_url] = [] #Initialise the url
+            chat_history[video_url] = [] #Initialise the url - create an empty history list - chat history will store the transcript at index 0
+
+            chat_history[video_url].append((transcript))#store the transcript
+
+        else:
+            # Retrieve the transcript from the chat history
+            #chat history will store the transcript at index 0
+            if len(chat_history[video_url]) > 0:
+                #Get the transcript from the chat history if its been populated before
+                transcript = chat_history[video_url][0]
+
+        if not transcript:  # Handle the case where transcript is still None (e.g., no subtitles)
+            return jsonify({"error": "No transcript available for this video."}), 400
 
         # 2. Construct the prompt, including conversation history (VERY IMPORTANT)
-        context = "\n".join([f"User: {u}\nAI: {a}" for u, a in chat_history[video_url]])
-        prompt = f"You are a helpful learning assistant.  Answer questions based on the following YouTube video transcript. You will also be provided with a history of previous conversation between the user and you:\n\nTranscript:\n{transcript}\n\nConversation History:\n{context}\n\nUser Question: {user_message}"
+        context = "\n".join([f"User: {u}\nAI: {a}" for u, a in chat_history[video_url][1:]]) # ignore the transcript record with [1:]
+        prompt = f"You are a helpful learning assistant.  Answer questions based on the following YouTube video transcript. You will also be provided with a history of previous conversation between the user and you and btw you must tends to be explain in simpler terms to advance, you ahve to leave no topic but you have to explain aeach and everything from basic to advace:\n\nTranscript:\n{transcript}\n\nConversation History:\n{context}\n\nUser Question: {user_message}"
 
         # 3. Get the AI's response
         response = genai_model.generate_content(prompt)
         ai_response = response.text
 
-        # 4. Update the chat history
-        chat_history[video_url].append((user_message, ai_response))  # Add to history
+        # 4. Update the chat history.  Since we store the transcript already, make sure it's up to date
+        chat_history[video_url].append((user_message, ai_response))  # Add the user message to history
 
         return jsonify({"response": ai_response})
 
