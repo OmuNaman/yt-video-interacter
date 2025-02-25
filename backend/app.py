@@ -17,6 +17,7 @@ if not GEMINI_API_KEY:
     print("GEMINI_API_KEY not found. Chat functionality will be disabled.")
     genai_model = None
     flashcard_model = None
+    summary_model = None
 else:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
@@ -39,11 +40,19 @@ else:
           generation_config=generation_config,
           system_instruction="System Prompt:\n\nYou are an AI designed to generate flashcard-style short questions from a given YouTube video transcript.\n\nInstructions:\nThe input will be a transcript of a YouTube video.\nYour task is to extract key points and convert them into concise question-based flashcards.\nThe output must be strictly in JSON format with the structure:\njson\n{\n  \"question1\": \"...\",\n  \"question2\": \"...\",\n  \"question3\": \"...\",\n  ...\n}\nGuidelines:\nGenerate as many questions as needed to cover the entire video.\nKeep questions short, precise, and to the point—ideal for quick recall.\nDo not provide answers, explanations, or any additional text.\nNo matter how long the input is, continue generating questions until all relevant points are covered.\nMaintain the JSON format without any additional commentary or formatting errors.\nYour sole purpose is to transform transcripts into structured flashcard-style questions in JSON format.",
         )
+
+        # Summary Generation
+        summary_model = genai.GenerativeModel(
+          model_name="gemini-1.5-pro-latest",
+          generation_config=generation_config,
+          system_instruction="You are an AI designed to create detailed and accurate summaries of YouTube video transcripts. Provide a comprehensive overview of the video's content, covering all key points and main topics. The summary should be well-structured and easy to understand, and you don't have to mention that you are summarizing it from a youtube transcript, you have to say that in this youtube video only",
+        )
         print("Gemini model loaded successfully.")
     except Exception as e:
         print(f"Failed to load Gemini model: {e}. Chat and Flashcards disabled.")
         genai_model = None
         flashcard_model = None
+        summary_model = None
 
 
 # In-Memory Chat History (Not for production - use a database!)
@@ -223,6 +232,26 @@ def generate_flashcards():
         return jsonify({"flashcards": flashcards_json})
     except Exception as e:
         print(f"Flashcard API Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/summary', methods=['POST'])
+def generate_summary():
+    if summary_model is None:
+        return jsonify({"error": "Gemini summary model not configured"}), 500
+
+    data = request.get_json()
+    transcript = data.get('transcript')
+
+    if not transcript:
+        return jsonify({"error": "Transcript is required"}), 400
+
+    try:
+        result = summary_model.generate_content(transcript)
+        summary = result.text
+
+        return jsonify({"summary": summary})
+    except Exception as e:
+        print(f"Summary API Error: {e}")
         return jsonify({"error": str(e)}), 500
 
 

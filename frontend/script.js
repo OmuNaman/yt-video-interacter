@@ -6,11 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoContainer = document.getElementById('videoContainer');
     const tabButtons = document.querySelectorAll('.tab-button');
     const flashcardsTab = document.getElementById('flashcardsTab'); // Get the flashcards tab
+    const summaryTab = document.getElementById('summaryTab');  // Get the summary tab element
 
     let videoTranscript = null;
     let currentVideoUrl = null;  // Store the current video URL
     let flashcards = [];  // Store generated flashcards
     let currentFlashcardIndex = 0;  // Track current flashcard index
+    let summary = "";  // Store the video summary
 
     // Handle video submission
     submitButton.addEventListener('click', async () => {
@@ -49,6 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         // Generate flashcards
                         await generateFlashcards(videoTranscript); // Call generateFlashcards after getting transcript
+
+                        // Generate Summary
+                        await generateSummary(videoTranscript);  // Call generateSummary after getting transcript
                     }
 
                 } catch (error) {
@@ -298,5 +303,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 displayFlashcard();
             }
         });
+    }
+
+    async function generateSummary(transcript) {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/summary', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ transcript: transcript })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.error) {
+                alert(`Error generating summary: ${data.error}`);
+            } else {
+                summary = data.summary; // Store the summary
+                displaySummary(); // Display it
+            }
+        } catch (error) {
+            console.error("Error generating summary:", error);
+            alert('Failed to generate summary. Check console for details.');
+        }
+    }
+
+    function displaySummary() {
+        summaryTab.innerHTML = `<div class="summary-container"><p>${summary}</p></div>`;
     }
 });

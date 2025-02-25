@@ -271,3 +271,18 @@ body {
     background-color: var(--border-color);
     cursor: not-allowed;
 }
+
+/* Existing CSS */
+
+/* Style for the summary tab */
+.summary-container {
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-radius: 12px;
+    line-height: 1.6; /* Improve readability */
+}
+
+/* Style the paragraph within the summary container */
+.summary-container p {
+    white-space: pre-line; /* Preserve line breaks from the summary */
+}
