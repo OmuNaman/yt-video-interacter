@@ -5,9 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitButton = document.getElementById('submitButton');
     const videoContainer = document.getElementById('videoContainer');
     const tabButtons = document.querySelectorAll('.tab-button');
+    const flashcardsTab = document.getElementById('flashcardsTab'); // Get the flashcards tab
 
     let videoTranscript = null;
     let currentVideoUrl = null;  // Store the current video URL
+    let flashcards = [];  // Store generated flashcards
+    let currentFlashcardIndex = 0;  // Track current flashcard index
 
     // Handle video submission
     submitButton.addEventListener('click', async () => {
@@ -44,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         let firstTranscriptKey = Object.keys(data)[0];
                         videoTranscript = data[firstTranscriptKey];
 
+                        // Generate flashcards
+                        await generateFlashcards(videoTranscript); // Call generateFlashcards after getting transcript
                     }
 
                 } catch (error) {
@@ -213,5 +218,85 @@ document.addEventListener('DOMContentLoaded', () => {
         messageElement.classList.add('message', sender);
         messageElement.textContent = message;
         chatMessages.appendChild(messageElement);
+    }
+
+    // Flashcard Generation and Display
+
+    async function generateFlashcards(transcript) {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/flashcards', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ transcript: transcript })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.error) {
+                alert(`Error generating flashcards: ${data.error}`);
+            } else {
+                // Flashcards successfully generated
+                try {
+                  flashcards = JSON.parse(data.flashcards);
+                  displayFlashcard();  // Initial display
+                  console.log('flashcards', flashcards);
+                } catch (error) {
+                  console.error('Error parsing flashcards JSON:', error);
+                  alert('Failed to parse flashcards. Check console for details.');
+                }
+            }
+
+        } catch (error) {
+            console.error("Error generating flashcards:", error);
+            alert('Failed to generate flashcards.  Check console for details.');
+        }
+    }
+
+    function displayFlashcard() {
+        if (Object.keys(flashcards).length === 0) {  // Check if flashcards is empty
+            flashcardsTab.innerHTML = '<p>No flashcards available.</p>';
+            return;
+        }
+
+        const question = flashcards[Object.keys(flashcards)[currentFlashcardIndex]];
+        const totalFlashcards = Object.keys(flashcards).length;
+
+
+        flashcardsTab.innerHTML = `
+            <div class="flashcard-container">
+                <div class="flashcard-question">
+                    <p class="hint">Hint</p>
+                    <p>${question}</p>
+                </div>
+                <div class="flashcard-navigation">
+                    <button id="prevButton" ${currentFlashcardIndex === 0 ? 'disabled' : ''}>←</button>
+                    <span>${currentFlashcardIndex + 1} / ${totalFlashcards}</span>
+                    <button id="nextButton" ${currentFlashcardIndex === totalFlashcards - 1 ? 'disabled' : ''}>→</button>
+                </div>
+            </div>
+        `;
+
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+
+        prevButton.addEventListener('click', () => {
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+                displayFlashcard();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentFlashcardIndex < totalFlashcards - 1) {
+                currentFlashcardIndex++;
+                displayFlashcard();
+            }
+        });
     }
 });

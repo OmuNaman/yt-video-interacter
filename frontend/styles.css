@@ -216,3 +216,58 @@ body {
     color: #ccc;
     background-color: var(--ai-message-color); /* Keep background consistent */
 }
+
+/* Existing CSS */
+
+.flashcardsTab {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.flashcard-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-radius: 12px;
+}
+
+.flashcard-question {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 20px;
+}
+
+.hint {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.flashcard-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.flashcard-navigation button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.flashcard-navigation button:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+}

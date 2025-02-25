@@ -16,17 +16,34 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     print("GEMINI_API_KEY not found. Chat functionality will be disabled.")
     genai_model = None
+    flashcard_model = None
 else:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
         genai_model = genai.GenerativeModel(
-            model_name="gemini-2.0-flash",  # Or your preferred model
+            model_name="gemini-1.5-pro-latest",  # Or your preferred model
             system_instruction="You are a helpful learning assistant. You are assisting the user understand content from a YouTube video. Be concise and to the point and maintain a professional yet friendly tone.",
+        )
+
+        # Flashcard generation config
+        generation_config = {
+          "temperature": 1,
+          "top_p": 0.95,
+          "top_k": 40,
+          "max_output_tokens": 8192,
+          "response_mime_type": "text/plain",
+        }
+
+        flashcard_model = genai.GenerativeModel(
+          model_name="gemini-1.5-pro-latest",
+          generation_config=generation_config,
+          system_instruction="System Prompt:\n\nYou are an AI designed to generate flashcard-style short questions from a given YouTube video transcript.\n\nInstructions:\nThe input will be a transcript of a YouTube video.\nYour task is to extract key points and convert them into concise question-based flashcards.\nThe output must be strictly in JSON format with the structure:\njson\n{\n  \"question1\": \"...\",\n  \"question2\": \"...\",\n  \"question3\": \"...\",\n  ...\n}\nGuidelines:\nGenerate as many questions as needed to cover the entire video.\nKeep questions short, precise, and to the point—ideal for quick recall.\nDo not provide answers, explanations, or any additional text.\nNo matter how long the input is, continue generating questions until all relevant points are covered.\nMaintain the JSON format without any additional commentary or formatting errors.\nYour sole purpose is to transform transcripts into structured flashcard-style questions in JSON format.",
         )
         print("Gemini model loaded successfully.")
     except Exception as e:
-        print(f"Failed to load Gemini model: {e}. Chat disabled.")
+        print(f"Failed to load Gemini model: {e}. Chat and Flashcards disabled.")
         genai_model = None
+        flashcard_model = None
 
 
 # In-Memory Chat History (Not for production - use a database!)
@@ -175,6 +192,39 @@ def chat_with_gemini():
     except Exception as e:
         print(f"Chat API Error: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+@app.route('/flashcards', methods=['POST'])
+def generate_flashcards():
+    if flashcard_model is None:
+        return jsonify({"error": "Gemini flashcard model not configured"}), 500
+
+    data = request.get_json()
+    transcript = data.get('transcript')
+
+    if not transcript:
+        return jsonify({"error": "Transcript is required"}), 400
+
+    try:
+        result = flashcard_model.generate_content(transcript)
+        flashcards_json = result.text
+
+        # Remove any leading/trailing backticks or code block markers
+        flashcards_json = flashcards_json.strip()
+        if flashcards_json.startswith("```json"):
+            flashcards_json = flashcards_json[7:]  # Remove "```json"
+        if flashcards_json.endswith("```"):
+            flashcards_json = flashcards_json[:-3]  # Remove "```"
+        if flashcards_json.startswith("`"):
+            flashcards_json = flashcards_json[1:]  # Remove first backtick if there
+        if flashcards_json.endswith("`"):
+            flashcards_json = flashcards_json[:-1] # Remove last backtick if there
+
+        return jsonify({"flashcards": flashcards_json})
+    except Exception as e:
+        print(f"Flashcard API Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True) # Remove debug=True for production
