@@ -4,8 +4,8 @@
     --primary-color: #8b3dff;
     --secondary-color: #1a1a1a;
     --border-color: #2c2c2c;
-    --user-message-color: #3d5afe; /* Example user message bubble color */
-    --ai-message-color: #424242; /* Example AI message bubble color */
+    --user-message-color: #3d5afe;
+    --ai-message-color: #424242;
 }
 
 * {
@@ -138,21 +138,20 @@ body {
 .chat-messages {
     flex: 1;
     overflow-y: auto;
-    padding: 20px; /* Increased padding for better spacing */
+    padding: 20px;
     display: flex;
-    flex-direction: column; /* Ensure messages stack from top to bottom */
+    flex-direction: column;
 }
 
 .welcome-message {
     background-color: rgba(139, 61, 255, 0.1);
     padding: 15px;
     border-radius: 8px;
-    margin-bottom: 20px; /* Increased margin */
-    text-align: center; /* Center the welcome message */
-    font-style: italic; /* Slightly emphasize welcome message */
-    color: #aaa; /* Muted color for welcome message */
+    margin-bottom: 20px;
+    text-align: center;
+    font-style: italic;
+    color: #aaa;
 }
-
 
 .chat-input {
     display: flex;
@@ -162,7 +161,7 @@ body {
 
 .chat-input input {
     flex: 1;
-    padding: 12px; /* Slightly reduced padding */
+    padding: 12px;
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background-color: var(--background-color);
@@ -171,7 +170,7 @@ body {
 }
 
 .send-button {
-    padding: 12px 20px; /* Slightly reduced padding */
+    padding: 12px 20px;
     border-radius: 8px;
     border: none;
     background-color: var(--primary-color);
@@ -185,39 +184,37 @@ body {
 
 /* Enhanced Chat Message Styling */
 .message {
-    padding: 12px 18px; /* Adjusted padding for message bubbles */
+    padding: 12px 18px;
     margin-bottom: 10px;
-    border-radius: 20px; /* More rounded corners for bubble effect */
+    border-radius: 20px;
     word-break: break-word;
-    max-width: 80%; /* Limit message bubble width */
-    clear: both; /* Prevent floating issues */
+    max-width: 80%;
+    clear: both;
 }
 
 .message.user {
     background-color: var(--user-message-color);
     color: var(--text-color);
-    align-self: flex-end; /* Align user messages to the right */
-    text-align: left; /* Text inside bubble align left for readability */
-    margin-right: 10px; /* Add some right margin */
-    border-bottom-right-radius: 5px; /* Slightly less round on the corner towards the edge */
+    align-self: flex-end;
+    text-align: left;
+    margin-right: 10px;
+    border-bottom-right-radius: 5px;
 }
 
 .message.ai {
     background-color: var(--ai-message-color);
     color: #eee;
-    align-self: flex-start; /* Align AI messages to the left */
-    text-align: left;  /* Text inside bubble align left for readability */
-    margin-left: 10px; /* Add some left margin */
-    border-bottom-left-radius: 5px; /* Slightly less round on the corner towards the edge */
+    align-self: flex-start;
+    text-align: left;
+    margin-left: 10px;
+    border-bottom-left-radius: 5px;
 }
 
 .message.ai.loading {
     font-style: italic;
     color: #ccc;
-    background-color: var(--ai-message-color); /* Keep background consistent */
+    background-color: var(--ai-message-color);
 }
-
-/* Existing CSS */
 
 .flashcardsTab {
     display: flex;
@@ -230,108 +227,55 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px;
+    padding: 25px;
     background-color: var(--secondary-color);
-    border-radius: 12px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
 .flashcard-question {
     flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 1.2rem;
-    padding: 20px;
+    font-size: 1.3rem;
+    padding: 15px 0;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed var(--border-color);
 }
 
 .hint {
-  position: absolute;
-  left: 0;
-  top: 0;
+    font-size: 0.9rem;
+    color: #aaa;
+    font-style: italic;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
-.flashcard-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-}
-
-.flashcard-navigation button {
-    padding: 8px 16px;
-    border-radius: 8px;
+/* NEW: Style for button and hidden hint  */
+.flashcard-question button#showHintButton {
+    padding: 5px 10px;
+    border-radius: 5px;
     border: none;
-    background-color: var(--primary-color);
+    background-color: var(--border-color);
     color: var(--text-color);
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 5px;
 }
 
-.flashcard-navigation button:disabled {
-    background-color: var(--border-color);
-    cursor: not-allowed;
-}
-
-/* Existing CSS */
-
-/* Style for the summary tab */
-.summary-container {
-    padding: 20px;
-    background-color: var(--secondary-color);
-    border-radius: 12px;
-    line-height: 1.6; /* Improve readability */
-}
-
-/* Style the paragraph within the summary container */
-.summary-container p {
-    white-space: pre-line; /* Preserve line breaks from the summary */
-}
-
-/* Existing CSS */
-
-.flashcardsTab {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.flashcard-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 25px; /* Increased padding */
-    background-color: var(--secondary-color);
-    border-radius: 15px; /* More rounded corners */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Added shadow for depth */
-}
-
-.flashcard-question {
-    flex: 1;
-    display: flex;
-    flex-direction: column; /* Stack hint and question */
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 1.3rem; /* Slightly larger question text */
-    padding: 15px 0; /* Vertical padding */
-    margin-bottom: 15px; /* Space before answer button */
-    border-bottom: 1px dashed var(--border-color); /* Separator */
-}
-
-.hint {
-    font-size: 0.9rem; /* Smaller hint text */
-    color: #aaa; /* Muted hint color */
-    font-style: italic;
-    margin-bottom: 10px; /* Space between hint and question */
-    text-align: center; /* Center hint text */
+.flashcard-question button#showHintButton:hover {
+    background-color: var(--primary-color);
+    color: var(--text-color);
 }
 
 .flashcard-answer {
     padding: 15px;
-    border-radius: 0 0 15px 15px; /* Rounded bottom corners */
-    background-color: #252525; /* Slightly darker answer background */
-    margin-top: 15px; /* Space above answer */
+    border-radius: 0 0 15px 15px;
+    background-color: #252525;
+    margin-top: 15px;
 }
 
 .answer-title {
@@ -340,15 +284,14 @@ body {
 }
 
 .answer-text {
-    line-height: 1.5; /* Improve answer text readability */
+    line-height: 1.5;
 }
 
 .flashcard-actions {
     display: flex;
-    justify-content: center; /* Center the button */
-    margin-bottom: 15px; /* Space above navigation */
+    justify-content: center;
+    margin-bottom: 15px;
 }
-
 
 .flashcard-actions button#showAnswerButton {
     padding: 10px 20px;
@@ -357,13 +300,12 @@ body {
     background-color: var(--primary-color);
     color: var(--text-color);
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth hover effect */
+    transition: background-color 0.3s ease;
 }
 
 .flashcard-actions button#showAnswerButton:hover {
-    background-color: #7a34d9; /* Slightly darker hover color */
+    background-color: #7a34d9;
 }
-
 
 .flashcard-navigation {
     display: flex;
@@ -373,27 +315,37 @@ body {
 }
 
 .flashcard-navigation button {
-    padding: 10px 20px; /* Adjusted padding for nav buttons */
+    padding: 10px 20px;
     border-radius: 8px;
     border: none;
     background-color: var(--primary-color);
     color: var(--text-color);
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth hover effect */
+    transition: background-color 0.3s ease;
 }
 
 .flashcard-navigation button:hover {
-    background-color: #7a34d9; /* Slightly darker hover color */
+    background-color: #7a34d9;
 }
-
 
 .flashcard-navigation button:disabled {
     background-color: var(--border-color);
     cursor: not-allowed;
-    opacity: 0.7; /* Indicate disabled state */
+    opacity: 0.7;
 }
-
 
 .hidden {
     display: none;
+}
+
+/* Style for the summary tab */
+.summary-container {
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-radius: 12px;
+    line-height: 1.6;
+}
+
+.summary-container p {
+    white-space: pre-line;
 }

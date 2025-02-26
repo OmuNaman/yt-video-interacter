@@ -5,21 +5,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitButton = document.getElementById('submitButton');
     const videoContainer = document.getElementById('videoContainer');
     const tabButtons = document.querySelectorAll('.tab-button');
-    const flashcardsTab = document.getElementById('flashcardsTab'); // Get the flashcards tab
-    const summaryTab = document.getElementById('summaryTab');  // Get the summary tab element
+    const flashcardsTab = document.getElementById('flashcardsTab');
+    const summaryTab = document.getElementById('summaryTab');
 
     let videoTranscript = null;
-    let currentVideoUrl = null;  // Store the current video URL
-    let flashcards = [];  // Store generated flashcards
-    let currentFlashcardIndex = 0;  // Track current flashcard index
-    let summary = "";  // Store the video summary
+    let currentVideoUrl = null;
+    let flashcards = [];
+    let currentFlashcardIndex = 0;
+    let summary = "";
 
     // Handle video submission
     submitButton.addEventListener('click', async () => {
         const videoUrl = videoInput.value;
         if (videoUrl) {
-            currentVideoUrl = videoUrl; // Set current video URL
-            videoTranscript = null; // clear transcript
+            currentVideoUrl = videoUrl;
+            videoTranscript = null;
             const videoId = extractVideoId(videoUrl);
             if (videoId) {
                 embedVideo(videoId);
@@ -45,20 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.error) {
                         alert(`Error fetching transcript: ${data.error}`);
                     } else {
-                        // For now just get first subtitle if there is one
                         let firstTranscriptKey = Object.keys(data)[0];
                         videoTranscript = data[firstTranscriptKey];
 
                         // Generate flashcards
-                        await generateFlashcards(videoTranscript); // Call generateFlashcards after getting transcript
+                        await generateFlashcards(videoTranscript);
 
                         // Generate Summary
-                        await generateSummary(videoTranscript);  // Call generateSummary after getting transcript
+                        await generateSummary(videoTranscript);
                     }
 
                 } catch (error) {
                     console.error("Error fetching transcript:", error);
-                    alert('Failed to fetch transcript.  Check console for details.');
+                    alert('Failed to fetch transcript. Check console for details.');
                 }
 
             } else {
@@ -69,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle tab switching (same as before)
+    // Handle tab switching
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -81,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Helper Functions (same as before)
+    // Helper Functions
     function extractVideoId(url) {
         const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
         const match = url.match(regex);
@@ -101,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // Add resize functionality (same as before)
+    // Add resize functionality
     const resizeHandle = document.getElementById('resizeHandle');
     const sidebar = document.querySelector('.sidebar');
     let isResizing = false;
@@ -153,38 +152,36 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
 
-    // Chat Functionality (Enhanced)
+    // Chat Functionality
     const chatMessages = document.querySelector('.chat-messages');
     const chatInput = document.querySelector('.chat-input input');
     const sendButton = document.querySelector('.send-button');
-    let isGeneratingResponse = false; // Flag to prevent multiple requests
+    let isGeneratingResponse = false;
 
     sendButton.addEventListener('click', async () => {
         const userMessage = chatInput.value;
-        if (userMessage && !isGeneratingResponse) {  //Check if another message is generating
+        if (userMessage && !isGeneratingResponse) {
             isGeneratingResponse = true;
-            chatInput.disabled = true; // Disable input while generating
+            chatInput.disabled = true;
             sendButton.disabled = true;
 
             addMessage(userMessage, 'user');
             chatInput.value = '';
 
-            // Add "..." loading indicator
             const loadingIndicator = document.createElement('div');
             loadingIndicator.classList.add('message', 'ai', 'loading');
             loadingIndicator.textContent = '...';
             chatMessages.appendChild(loadingIndicator);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Send message to the backend
             try {
-                const response = await fetch('http://127.0.0.1:5000/chat', { // Pass videoUrl
+                const response = await fetch('http://127.0.0.1:5000/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        videoUrl: currentVideoUrl,  // Send the current video URL
+                        videoUrl: currentVideoUrl,
                         message: userMessage,
                     })
                 });
@@ -195,17 +192,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const data = await response.json();
                 if (data.error) {
-                    loadingIndicator.remove(); // remove the indicator
+                    loadingIndicator.remove();
                     addMessage(`Error: ${data.error}`, 'ai');
                 } else {
-                    loadingIndicator.remove(); // remove the indicator
+                    loadingIndicator.remove();
                     addMessage(data.response, 'ai');
                 }
 
 
             } catch (error) {
                 console.error("Error sending chat message:", error);
-                loadingIndicator.remove(); // remove the indicator
+                loadingIndicator.remove();
                 addMessage('Failed to send message. Check console.', 'ai');
             } finally {
                 isGeneratingResponse = false;
@@ -226,7 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Flashcard Generation and Display
-
     async function generateFlashcards(transcript) {
         try {
             const response = await fetch('http://127.0.0.1:5000/flashcards', {
@@ -259,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Error generating flashcards:", error);
-            alert('Failed to generate flashcards.  Check console for details.');
+            alert('Failed to generate flashcards. Check console for details.');
         }
     }
 
@@ -275,7 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
         flashcardsTab.innerHTML = `
             <div class="flashcard-container">
                 <div class="flashcard-question">
-                    <p class="hint">Hint: ${flashcardData.hint}</p>
+                    <p class="hint hidden" id="flashcardHint">Hint: ${flashcardData.hint}</p>
+                    <button id="showHintButton">Show Hint</button>
                     <p>${flashcardData.question}</p>
                 </div>
                 <div class="flashcard-answer hidden" id="flashcardAnswer">
@@ -297,6 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const nextButton = document.getElementById('nextButton');
         const showAnswerButton = document.getElementById('showAnswerButton');
         const flashcardAnswerDiv = document.getElementById('flashcardAnswer');
+        const showHintButton = document.getElementById('showHintButton');
+        const flashcardHint = document.getElementById('flashcardHint');
 
         prevButton.addEventListener('click', () => {
             if (currentFlashcardIndex > 0) {
@@ -313,11 +312,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         showAnswerButton.addEventListener('click', () => {
-            flashcardAnswerDiv.classList.remove('hidden'); // Show answer
-            showAnswerButton.style.display = 'none'; // Hide button after click
+            flashcardAnswerDiv.classList.remove('hidden');
+            showAnswerButton.style.display = 'none';
+        });
+
+        showHintButton.addEventListener('click', () => {
+            flashcardHint.classList.remove('hidden');
+            showHintButton.style.display = 'none';
         });
     }
 
+    // Summary Generation and Display
     async function generateSummary(transcript) {
         try {
             const response = await fetch('http://127.0.0.1:5000/summary', {
@@ -337,8 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.error) {
                 alert(`Error generating summary: ${data.error}`);
             } else {
-                summary = data.summary; // Store the summary
-                displaySummary(); // Display it
+                summary = data.summary;
+                displaySummary();
             }
         } catch (error) {
             console.error("Error generating summary:", error);
