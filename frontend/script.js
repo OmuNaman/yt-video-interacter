@@ -248,12 +248,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // Flashcards successfully generated
                 try {
-                  flashcards = JSON.parse(data.flashcards);
-                  displayFlashcard();  // Initial display
-                  console.log('flashcards', flashcards);
+                    flashcards = JSON.parse(data.flashcards); // Parse directly - backend cleans JSON now
+                    displayFlashcard();  // Initial display
+                    console.log('flashcards', flashcards);
                 } catch (error) {
-                  console.error('Error parsing flashcards JSON:', error);
-                  alert('Failed to parse flashcards. Check console for details.');
+                    console.error('Error parsing flashcards JSON:', error);
+                    alert('Failed to parse flashcards. Check console for details.');
                 }
             }
 
@@ -264,20 +264,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayFlashcard() {
-        if (Object.keys(flashcards).length === 0) {  // Check if flashcards is empty
+        if (Object.keys(flashcards).length === 0) {
             flashcardsTab.innerHTML = '<p>No flashcards available.</p>';
             return;
         }
 
-        const question = flashcards[Object.keys(flashcards)[currentFlashcardIndex]];
+        const flashcardData = flashcards[Object.keys(flashcards)[currentFlashcardIndex]];
         const totalFlashcards = Object.keys(flashcards).length;
-
 
         flashcardsTab.innerHTML = `
             <div class="flashcard-container">
                 <div class="flashcard-question">
-                    <p class="hint">Hint</p>
-                    <p>${question}</p>
+                    <p class="hint">Hint: ${flashcardData.hint}</p>
+                    <p>${flashcardData.question}</p>
+                </div>
+                <div class="flashcard-answer hidden" id="flashcardAnswer">
+                    <p class="answer-title">Answer:</p>
+                    <p class="answer-text">${flashcardData.answer}</p>
+                </div>
+                <div class="flashcard-actions">
+                    <button id="showAnswerButton">Show Answer</button>
                 </div>
                 <div class="flashcard-navigation">
                     <button id="prevButton" ${currentFlashcardIndex === 0 ? 'disabled' : ''}>←</button>
@@ -289,6 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const prevButton = document.getElementById('prevButton');
         const nextButton = document.getElementById('nextButton');
+        const showAnswerButton = document.getElementById('showAnswerButton');
+        const flashcardAnswerDiv = document.getElementById('flashcardAnswer');
 
         prevButton.addEventListener('click', () => {
             if (currentFlashcardIndex > 0) {
@@ -302,6 +310,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentFlashcardIndex++;
                 displayFlashcard();
             }
+        });
+
+        showAnswerButton.addEventListener('click', () => {
+            flashcardAnswerDiv.classList.remove('hidden'); // Show answer
+            showAnswerButton.style.display = 'none'; // Hide button after click
         });
     }
 

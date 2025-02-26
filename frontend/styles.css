@@ -286,3 +286,114 @@ body {
 .summary-container p {
     white-space: pre-line; /* Preserve line breaks from the summary */
 }
+
+/* Existing CSS */
+
+.flashcardsTab {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.flashcard-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 25px; /* Increased padding */
+    background-color: var(--secondary-color);
+    border-radius: 15px; /* More rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Added shadow for depth */
+}
+
+.flashcard-question {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Stack hint and question */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.3rem; /* Slightly larger question text */
+    padding: 15px 0; /* Vertical padding */
+    margin-bottom: 15px; /* Space before answer button */
+    border-bottom: 1px dashed var(--border-color); /* Separator */
+}
+
+.hint {
+    font-size: 0.9rem; /* Smaller hint text */
+    color: #aaa; /* Muted hint color */
+    font-style: italic;
+    margin-bottom: 10px; /* Space between hint and question */
+    text-align: center; /* Center hint text */
+}
+
+.flashcard-answer {
+    padding: 15px;
+    border-radius: 0 0 15px 15px; /* Rounded bottom corners */
+    background-color: #252525; /* Slightly darker answer background */
+    margin-top: 15px; /* Space above answer */
+}
+
+.answer-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.answer-text {
+    line-height: 1.5; /* Improve answer text readability */
+}
+
+.flashcard-actions {
+    display: flex;
+    justify-content: center; /* Center the button */
+    margin-bottom: 15px; /* Space above navigation */
+}
+
+
+.flashcard-actions button#showAnswerButton {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.flashcard-actions button#showAnswerButton:hover {
+    background-color: #7a34d9; /* Slightly darker hover color */
+}
+
+
+.flashcard-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.flashcard-navigation button {
+    padding: 10px 20px; /* Adjusted padding for nav buttons */
+    border-radius: 8px;
+    border: none;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.flashcard-navigation button:hover {
+    background-color: #7a34d9; /* Slightly darker hover color */
+}
+
+
+.flashcard-navigation button:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+    opacity: 0.7; /* Indicate disabled state */
+}
+
+
+.hidden {
+    display: none;
+}

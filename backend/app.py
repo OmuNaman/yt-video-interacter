@@ -22,7 +22,7 @@ else:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
         genai_model = genai.GenerativeModel(
-            model_name="gemini-1.5-pro-latest",  # Or your preferred model
+            model_name="gemini-2.0-flash",  # Or your preferred model
             system_instruction="You are a helpful learning assistant. You are assisting the user understand content from a YouTube video. Be concise and to the point and maintain a professional yet friendly tone.",
         )
 
@@ -36,14 +36,14 @@ else:
         }
 
         flashcard_model = genai.GenerativeModel(
-          model_name="gemini-1.5-pro-latest",
+          model_name="gemini-2.0-flash",
           generation_config=generation_config,
-          system_instruction="System Prompt:\n\nYou are an AI designed to generate flashcard-style short questions from a given YouTube video transcript.\n\nInstructions:\nThe input will be a transcript of a YouTube video.\nYour task is to extract key points and convert them into concise question-based flashcards.\nThe output must be strictly in JSON format with the structure:\njson\n{\n  \"question1\": \"...\",\n  \"question2\": \"...\",\n  \"question3\": \"...\",\n  ...\n}\nGuidelines:\nGenerate as many questions as needed to cover the entire video.\nKeep questions short, precise, and to the point—ideal for quick recall.\nDo not provide answers, explanations, or any additional text.\nNo matter how long the input is, continue generating questions until all relevant points are covered.\nMaintain the JSON format without any additional commentary or formatting errors.\nYour sole purpose is to transform transcripts into structured flashcard-style questions in JSON format.",
+          system_instruction="System Prompt:\nYou are an AI designed to generate structured flashcard-style questions from a given YouTube video transcript.\n\nYour Task:\nConvert the transcript into flashcard-based questions with structured hints and answers.\nThe output must be strictly in JSON format with the structure:\njson\nCopy\nEdit\n{\n  \"question1\": {\n    \"question\": \"What is the main purpose of reinforcement learning?\",\n    \"hint\": \"It involves rewards and punishments to guide decision-making.\",\n    \"answer\": \"Reinforcement learning is a machine learning paradigm where an agent learns by interacting with an environment and receiving feedback in the form of rewards or penalties.\"\n  },\n  \"question2\": {\n    \"question\": \"How does a convolutional neural network (CNN) process images?\",\n    \"hint\": \"Think about layers extracting different features like edges and textures.\",\n    \"answer\": \"A CNN processes images using convolutional layers that detect patterns such as edges, textures, and shapes, followed by pooling layers that reduce dimensions while preserving important features.\"\n  }\n}\nGuidelines:\n✅ Generate as many questions as needed to cover the entire video.\n✅ Questions should be concise, clear, and to the point.\n✅ Hints should be short, giving a slight nudge without revealing the answer.\n✅ Answers must be detailed and informative, explaining the concept thoroughly.\n✅ No additional commentary—just structured JSON output.\n✅ Continue generating questions until the full transcript is covered.\n\nYour role is to convert knowledge into engaging, structured flashcards in JSON format.",
         )
 
         # Summary Generation
         summary_model = genai.GenerativeModel(
-          model_name="gemini-1.5-pro-latest",
+          model_name="gemini-2.0-flash",
           generation_config=generation_config,
           system_instruction="You are an AI designed to create detailed and accurate summaries of YouTube video transcripts. Provide a comprehensive overview of the video's content, covering all key points and main topics. The summary should be well-structured and easy to understand, and you don't have to mention that you are summarizing it from a youtube transcript, you have to say that in this youtube video only",
         )
