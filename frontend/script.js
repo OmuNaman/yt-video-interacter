@@ -7,18 +7,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = document.querySelectorAll('.tab-button');
     const flashcardsTab = document.getElementById('flashcardsTab');
     const summaryTab = document.getElementById('summaryTab');
+    const notesTab = document.getElementById('notesTab');  // Get the notes tab
+    const notesTextarea = document.getElementById('notesTextarea'); // get note text area
+    const saveNotesButton = document.getElementById('saveNotesButton');  // Get save button
 
     let videoTranscript = null;
     let currentVideoUrl = null;
     let flashcards = [];
     let currentFlashcardIndex = 0;
     let summary = "";
+    let notes = ""; //Add the notes functionality
+
+    //Load Notes on Submitting Video
+
+    async function loadNotes() {
+      notes = localStorage.getItem('noteStorage-' + currentVideoUrl);
+      if(notes) {
+        notesTextarea.value = notes;
+      }
+    }
 
     // Handle video submission
     submitButton.addEventListener('click', async () => {
         const videoUrl = videoInput.value;
         if (videoUrl) {
             currentVideoUrl = videoUrl;
+
+            //Clear notes
+            notes = "";
+
             videoTranscript = null;
             const videoId = extractVideoId(videoUrl);
             if (videoId) {
@@ -53,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         // Generate Summary
                         await generateSummary(videoTranscript);
+
+                        //Load Notes
+                        await loadNotes();
                     }
 
                 } catch (error) {
@@ -244,8 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // Flashcards successfully generated
                 try {
-                    flashcards = JSON.parse(data.flashcards); // Parse directly - backend cleans JSON now
-                    displayFlashcard();  // Initial display
+                    flashcards = JSON.parse(data.flashcards);
+                    displayFlashcard();
                     console.log('flashcards', flashcards);
                 } catch (error) {
                     console.error('Error parsing flashcards JSON:', error);
@@ -353,5 +373,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displaySummary() {
         summaryTab.innerHTML = `<div class="summary-container"><p>${summary}</p></div>`;
+    }
+
+    //Load Existing Notes
+
+    function saveNotes () {
+        notes = notesTextarea.value;
+        localStorage.setItem('noteStorage-' + currentVideoUrl, notes);
+        alert('Saving Succesful');
+    }
+
+    saveNotesButton.addEventListener('click', () => {
+        saveNotes();
+    });
+
+    async function loadNotes() {
+      notes = localStorage.getItem('noteStorage-' + currentVideoUrl);
+      if(notes) {
+        notesTextarea.value = notes;
+      }
     }
 });

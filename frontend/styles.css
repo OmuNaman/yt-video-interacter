@@ -349,3 +349,36 @@ body {
 .summary-container p {
     white-space: pre-line;
 }
+
+/* notes tab styling */
+.notesTab {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#notesTextarea {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    resize: vertical; /* Allow vertical resizing */
+}
+
+.notes-actions {
+    display: flex;
+    justify-content: flex-end; /* Align button to the right */
+    margin-top: 10px;
+}
+
+.notes-actions button {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    cursor: pointer;
+}
