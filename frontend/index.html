@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="landing-page" id="landingPage">
+        <h1>What do you want to learn today?</h1>
+        <div class="search-container">
+            <input type="text" id="videoInput" placeholder="Upload file, paste YouTube video, or record a lecture">
+            <button id="submitButton">→</button>
+        </div>
+    </div>
+
+    <div class="content-page hidden" id="contentPage">
+        <div class="main-content">
+            <div class="video-container" id="videoContainer">
+                <!-- YouTube video will be embedded here -->
+            </div>
+            <div class="resize-handle" id="resizeHandle"></div>
+            <div class="sidebar">
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="chat">Chat</button>
+                    <button class="tab-button" data-tab="flashcards">Flashcards</button>
+                    <button class="tab-button" data-tab="summary">Summary</button>
+                    <button class="tab-button" data-tab="notes">Notes</button>
+                </div>
+                <div class="tab-content active" id="chatTab">
+                    <div class="chat-messages">
+                        <div class="welcome-message">
+                            Welcome to the chat! Ask me anything. I may not always be right, but your feedback will help me improve!
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" placeholder="Ask anything...">
+                        <button class="send-button">Send</button>
+                    </div>
+                </div>
+                <div class="tab-content" id="flashcardsTab">
+                    <!-- Flashcards content -->
+                </div>
+                <div class="tab-content" id="summaryTab">
+                    <!-- Summary content -->
+                </div>
+                <div class="tab-content" id="notesTab">
+                    <textarea id="notesTextarea" placeholder="Take your notes here..."></textarea>
+                    <div class="notes-actions">
+                        <button class="saveNotesButton">Save Notes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="script.js"></script>
+</html>
