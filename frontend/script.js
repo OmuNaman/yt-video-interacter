@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const BASE_URL = 'https://yt-video-interacter-1.onrender.com'; 
     const landingPage = document.getElementById('landingPage');
     const contentPage = document.getElementById('contentPage');
     const videoInput = document.getElementById('videoInput');
@@ -45,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Fetch transcript from the backend
                 try {
-                    const response = await fetch('http://127.0.0.1:5000/transcript', {
+                    const response = await fetch(`${BASE_URL}/transcript`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
